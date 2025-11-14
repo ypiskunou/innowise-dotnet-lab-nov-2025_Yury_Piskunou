@@ -7,8 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.20" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0-rc.1.22427.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.20">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProductService.Entities\ProductService.Entities.csproj" />
+      <ProjectReference Include="..\ProductService.Presentation\ProductService.Presentation.csproj" />
+      <ProjectReference Include="..\ProductService.Repository\ProductService.Repository.csproj" />
+      <ProjectReference Include="..\ProductService.Application\ProductService.Application.csproj" />
     </ItemGroup>
 
 </Project>

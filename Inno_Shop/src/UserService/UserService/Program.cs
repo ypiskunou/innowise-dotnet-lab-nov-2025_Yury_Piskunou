@@ -1,15 +1,28 @@
+
+using UserService.Extensions;
+using AssemblyReference = UserService.Presentation.AssemblyReference;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+// builder.Services.AddDbContext<RepositoryContext>(
+//     opts => opts.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+// );
+// builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+// builder.Services.AddScoped<IServiceManager, ServiceManager>();
+// builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.ConfigureDependencies();
+builder.Services.ConfigureApplicationServices();
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AssemblyReference).Assembly);
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+app.ConfigureExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -18,7 +31,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
