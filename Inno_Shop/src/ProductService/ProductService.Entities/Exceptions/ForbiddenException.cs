@@ -1,6 +1,6 @@
 namespace ProductService.Entities.Exceptions;
 
-public class ForbiddenException : Exception
+public class ForbiddenException : BadRequestException
 {
     public ForbiddenException(string message) : base(message)
     {

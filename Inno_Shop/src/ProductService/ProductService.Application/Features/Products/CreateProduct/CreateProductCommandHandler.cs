@@ -38,6 +38,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var productEntity = _mapper.Map<Product>(request.Product);
         
         productEntity.UserId = currentUserId.Value;
+        productEntity.IsActive = true;
+        productEntity.IsDeleted = false;
         
         _repository.Product.CreateProduct(productEntity);
         await _repository.SaveChangesAsync(cancellationToken);
