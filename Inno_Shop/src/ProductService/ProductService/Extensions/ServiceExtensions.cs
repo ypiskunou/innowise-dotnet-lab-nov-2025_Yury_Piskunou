@@ -3,9 +3,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ProductService.Application;
 using ProductService.Contracts;
 using ProductService.Repository;
-using ProductService.Service;
 using ProductService.Services;
 
 namespace ProductService.Extensions;

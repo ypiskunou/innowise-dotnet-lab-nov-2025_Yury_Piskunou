@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using UserService.Application;
+using UserService.Application.Contracts;
 using UserService.Application.Features.Authentication;
+using UserService.Application.Services;
 using UserService.Contracts;
 using UserService.Entities.Models;
 using UserService.Repository;
-using UserService.Service;
-using UserService.Service.Contracts;
 
 namespace UserService.Extensions;
 
@@ -37,6 +38,8 @@ public static class ServiceExtensions
         services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        
+        services.AddScoped<IEmailSender, EmailSender>();
 
         // Здесь же можно будет добавить Pipeline Behaviors
         // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

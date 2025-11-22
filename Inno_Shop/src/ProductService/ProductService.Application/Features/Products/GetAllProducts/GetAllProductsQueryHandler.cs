@@ -1,10 +1,9 @@
 using AutoMapper;
 using MediatR;
-using ProductService.Application;
 using ProductService.Contracts;
 using ProductService.Shared.DataTransferObjects;
 
-namespace ProductService.Service;
+namespace ProductService.Application.Features.Products.GetAllProducts;
 
 public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
 {

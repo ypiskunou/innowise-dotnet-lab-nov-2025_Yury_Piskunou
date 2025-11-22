@@ -4,7 +4,7 @@ using ProductService.Contracts;
 using ProductService.Entities.Exceptions;
 using ProductService.Shared.DataTransferObjects;
 
-namespace ProductService.Application;
+namespace ProductService.Application.Features.Categories.GetCategoryById;
 
 public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
 {

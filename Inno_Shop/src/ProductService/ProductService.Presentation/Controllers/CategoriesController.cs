@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application;
+using ProductService.Application.Features.Categories.GetAllCategories;
+using ProductService.Application.Features.Categories.GetCategoryById;
 
 namespace ProductService.Presentation.Controllers;
 

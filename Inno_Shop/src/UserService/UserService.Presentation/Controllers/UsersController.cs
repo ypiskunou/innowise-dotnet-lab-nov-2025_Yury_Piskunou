@@ -7,8 +7,8 @@ using Shared.DataTransferObjects;
 using UserService.Application.Features.Users.DeactivateUser;
 using UserService.Application.Features.Users.GetAllUsers;
 using UserService.Application.Features.Users.GetUserById;
+using UserService.Application.Features.Users.RegisterUser;
 using UserService.Application.Features.Users.UpdateUserProfile;
-using UserService.Service.Features.Users.RegisterUser;
 
 namespace UserService.Presentation.Controllers;
 

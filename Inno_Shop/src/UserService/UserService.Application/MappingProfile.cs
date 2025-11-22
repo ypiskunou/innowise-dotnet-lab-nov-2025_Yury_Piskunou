@@ -2,7 +2,7 @@ using AutoMapper;
 using Shared.DataTransferObjects;
 using UserService.Entities.Models;
 
-namespace UserService.Service;
+namespace UserService.Application;
 
 public class MappingProfile : Profile
 {

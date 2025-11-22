@@ -1,10 +1,10 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UserService.Application.Contracts;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
 using UserService.Entities.Models;
-using UserService.Service.Features.Users.RegisterUser;
 
 namespace UserService.Application.Features.Users.RegisterUser;
 
@@ -13,12 +13,15 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
     private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IEmailSender _emailSender;
 
-    public RegisterUserCommandHandler(IRepositoryManager repository, IMapper mapper, IPasswordHasher<User> passwordHasher)
+    public RegisterUserCommandHandler(IRepositoryManager repository, IMapper mapper, 
+        IPasswordHasher<User> passwordHasher, IEmailSender emailSender)
     {
         _repository = repository;
         _mapper = mapper;
         _passwordHasher = passwordHasher;
+        _emailSender = emailSender;
     }
 
     public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -37,5 +40,11 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
         
         _repository.User.CreateUser(userEntity);
         await _repository.SaveChangesAsync(cancellationToken);
+        
+        await _emailSender.SendEmailAsync(
+            userEntity.Email, 
+            "Добро пожаловать в InnoShop!", 
+            $"<h1>Привет, {userEntity.Name}!</h1><p>Вы успешно зарегистрировались.</p>"
+        );
     }
 }

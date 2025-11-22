@@ -1,7 +1,7 @@
 using Shared.DataTransferObjects;
 using UserService.Entities.Models;
 
-namespace UserService.Service.Contracts;
+namespace UserService.Application.Contracts;
 
 public interface IAuthenticationManager
 {

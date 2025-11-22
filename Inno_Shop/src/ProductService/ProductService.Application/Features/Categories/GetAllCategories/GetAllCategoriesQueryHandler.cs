@@ -3,7 +3,7 @@ using MediatR;
 using ProductService.Contracts;
 using ProductService.Shared.DataTransferObjects;
 
-namespace ProductService.Application;
+namespace ProductService.Application.Features.Categories.GetAllCategories;
 
 public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
 {
