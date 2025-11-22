@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace UserService.Service.Features.Authentication.AuthenticateUser;
+namespace UserService.Application.Features.Authentication.AuthenticateUser;
 
 public class AuthenticateUserQueryValidator : AbstractValidator<AuthenticateUserQuery>
 {

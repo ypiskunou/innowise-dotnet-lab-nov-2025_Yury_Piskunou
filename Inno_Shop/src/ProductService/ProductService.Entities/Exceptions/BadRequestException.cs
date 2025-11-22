@@ -1,4 +1,4 @@
-namespace Entities.Exceptions;
+namespace ProductService.Entities.Exceptions;
 
 public class BadRequestException: Exception
 {

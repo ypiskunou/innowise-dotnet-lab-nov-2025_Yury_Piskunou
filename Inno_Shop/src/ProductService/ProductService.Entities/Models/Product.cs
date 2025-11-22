@@ -1,5 +1,4 @@
-﻿using Entities;
-
+﻿
 namespace ProductService.Entities.Models;
 
 public class Product

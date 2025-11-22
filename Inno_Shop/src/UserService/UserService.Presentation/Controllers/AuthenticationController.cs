@@ -1,8 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects;
-using UserService.Service.Features.Authentication;
-using UserService.Service.Features.Authentication.AuthenticateUser;
+using UserService.Application.Features.Authentication.AuthenticateUser;
 
 namespace UserService.Presentation.Controllers;
 

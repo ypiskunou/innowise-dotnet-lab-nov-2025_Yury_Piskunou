@@ -31,9 +31,10 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
         return await Products.Select(selector).ToListAsync();
     }
 
-    public async Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges) =>
+    public async Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges,
+        CancellationToken cancellationToken) =>
         await FindByCondition(a => a.Id == id, trackChanges)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
     public void CreateProduct(Product Product) => Create(Product);
 

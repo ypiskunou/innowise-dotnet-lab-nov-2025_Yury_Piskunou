@@ -1,7 +1,7 @@
 using System.Net;
-using Entities.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using ProductService.Entities.ErrorModel;
+using ProductService.Entities.Exceptions;
 
 namespace ProductService.Extensions;
 
@@ -23,6 +23,7 @@ public static class ExceptionMiddlewareExtensions
                     {
                         NotFoundException => StatusCodes.Status404NotFound,
                         BadRequestException => StatusCodes.Status400BadRequest,
+                        ForbiddenException => StatusCodes.Status403Forbidden,
                         _ => StatusCodes.Status500InternalServerError
                     };
 

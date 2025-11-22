@@ -4,5 +4,6 @@ public record ProductForUpdateDto(
     string Name, 
     decimal Price, 
     string Description, 
-    Guid CategoryId
+    Guid CategoryId, 
+    bool IsActive
 );

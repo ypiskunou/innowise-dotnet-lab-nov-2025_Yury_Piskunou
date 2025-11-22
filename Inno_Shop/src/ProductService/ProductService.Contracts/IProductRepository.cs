@@ -6,7 +6,7 @@ namespace ProductService.Contracts;
 public interface IProductRepository
 {
     Task<IEnumerable<Product?>> GetAllProductsAsync(bool trackChanges);
-    Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges);
+    Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges, CancellationToken cancellationToken = default);
     void CreateProduct(Product product);
     void DeleteProduct(Product product);
     

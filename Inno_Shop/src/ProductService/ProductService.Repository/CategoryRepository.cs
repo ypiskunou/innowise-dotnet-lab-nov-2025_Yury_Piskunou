@@ -14,8 +14,8 @@ public class CategoryRepository: RepositoryBase<Category>, ICategoryRepository
         .OrderBy(c => c.Name)
         .ToListAsync();
 
-    public async Task<Category?> GetCategoryByIdAsync(Guid id, bool trackChanges) =>
-        await FindByCondition(b => b.Id == id, trackChanges).FirstOrDefaultAsync();
+    public async Task<Category?> GetCategoryByIdAsync(Guid id, bool trackChanges, CancellationToken token) =>
+        await FindByCondition(b => b.Id == id, trackChanges).FirstOrDefaultAsync(token);
 
     public void CreateCategory(Category Category) => Create(Category);
 

@@ -1,5 +1,4 @@
-﻿using Entities;
-
+﻿
 namespace UserService.Entities.Models;
 
 public class User

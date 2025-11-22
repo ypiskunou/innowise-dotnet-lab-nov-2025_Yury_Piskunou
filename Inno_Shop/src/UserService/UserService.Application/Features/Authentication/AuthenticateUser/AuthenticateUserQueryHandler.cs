@@ -6,7 +6,7 @@ using UserService.Entities.Exceptions;
 using UserService.Entities.Models;
 using UserService.Service.Contracts;
 
-namespace UserService.Service.Features.Authentication.AuthenticateUser;
+namespace UserService.Application.Features.Authentication.AuthenticateUser;
 
 public class AuthenticateUserQueryHandler : IRequestHandler<AuthenticateUserQuery, TokenDto>
 {

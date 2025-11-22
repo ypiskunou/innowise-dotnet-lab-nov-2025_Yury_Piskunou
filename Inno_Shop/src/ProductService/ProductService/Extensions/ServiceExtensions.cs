@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProductService.Contracts;
 using ProductService.Repository;
 using ProductService.Service;
+using ProductService.Services;
 
 namespace ProductService.Extensions;
 
@@ -29,6 +30,10 @@ public static class ServiceExtensions
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
         
         services.AddValidatorsFromAssembly(typeof(MappingProfile).Assembly);
+        
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
+        
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
             
         // Здесь же можно будет добавить Pipeline Behaviors
         // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
