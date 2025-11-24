@@ -4,7 +4,7 @@ namespace ProductService.Entities.Models;
 public class Product
 {
     public Guid Id { get; init; }
-    public DateTime DateOfCreation { get; init; }
+    public DateTime DateOfCreation { get; set; }
     public DateTime DateOfLastUpdate { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
     public bool IsDeleted { get; set; } = false;

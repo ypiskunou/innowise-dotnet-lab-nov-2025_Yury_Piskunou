@@ -12,6 +12,8 @@ public class User
     public string? PhoneNumber { get; set; }
     
     public bool IsActive { get; set; } = true;
+    public string? VerificationToken { get; set; }
+    public DateTime? VerifiedAt { get; set; }
     
     public ICollection<Role> Roles { get; set; } = new List<Role>();
 }

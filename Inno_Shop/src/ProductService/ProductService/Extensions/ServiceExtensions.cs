@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ProductService.Application;
 using ProductService.Contracts;
 using ProductService.Repository;
@@ -27,16 +28,14 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
         
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
+        services.AddMediatR(cfg => 
+            cfg.RegisterServicesFromAssembly(typeof(MappingProfile).Assembly));
         
         services.AddValidatorsFromAssembly(typeof(MappingProfile).Assembly);
         
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
-            
-        // Здесь же можно будет добавить Pipeline Behaviors
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }
     
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
@@ -63,5 +62,38 @@ public static class ServiceExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
+    }
+    
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(s =>
+        {
+            s.SwaggerDoc("v1", new OpenApiInfo { Title = "InnoShop Product API", Version = "v1" });
+            
+            s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Вставьте токен так: Bearer eyJhbGciOiJIUz...",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Name = "Bearer",
+                    },
+                    new List<string>()
+                }
+            });
+        });
     }
 }

@@ -35,8 +35,14 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
         CancellationToken cancellationToken) =>
         await FindByCondition(a => a.Id == id, trackChanges)
             .FirstOrDefaultAsync(cancellationToken);
+    
+    public void CreateProduct(Product product) => Create(product);
 
-    public void CreateProduct(Product Product) => Create(Product);
-
-    public void DeleteProduct(Product Product) => Delete(Product);
+    public void DeleteProduct(Product product) => Delete(product);
+    
+    public async Task<bool> HasProductsInCategoryAsync(Guid categoryId, CancellationToken cancellationToken)
+    {
+        return await FindByCondition(p => p.CategoryId == categoryId, trackChanges: false)
+            .AnyAsync(cancellationToken);
+    }
 }

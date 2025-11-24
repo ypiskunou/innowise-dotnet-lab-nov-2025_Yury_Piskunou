@@ -31,6 +31,11 @@ public class AuthenticateUserQueryHandler : IRequestHandler<AuthenticateUserQuer
         if (user is null)
             throw new InvalidPasswordException();
         
+        if (user.VerifiedAt is null)
+        {
+            throw new AccountNotVerifiedException();
+        }
+        
         var passwordVerificationResult = 
             _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.UserForAuth.Password);
         

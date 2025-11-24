@@ -38,13 +38,20 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
         if(defaultRole is null) throw new RoleNotFoundException("User"); 
         userEntity.Roles.Add(defaultRole);
         
+        userEntity.VerificationToken = Guid.NewGuid().ToString();
+        
         _repository.User.CreateUser(userEntity);
         await _repository.SaveChangesAsync(cancellationToken);
         
+        var verifyUrl = $"https://localhost:7213/api/users/" +
+                        $"verify-email?email={userEntity.Email}&token={userEntity.VerificationToken}";
+
         await _emailSender.SendEmailAsync(
             userEntity.Email, 
-            "Добро пожаловать в InnoShop!", 
-            $"<h1>Привет, {userEntity.Name}!</h1><p>Вы успешно зарегистрировались.</p>"
+            "Подтверждение почты InnoShop", 
+            $"<h1>Подтвердите аккаунт</h1>" +
+            $"<p>Пожалуйста, перейдите по ссылке, чтобы активировать профиль:</p>" +
+            $"<a href='{verifyUrl}'>Нажмите сюда для подтверждения</a>"
         );
     }
 }

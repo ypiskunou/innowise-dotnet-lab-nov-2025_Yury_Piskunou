@@ -9,6 +9,8 @@ public interface IProductRepository
     Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges, CancellationToken cancellationToken = default);
     void CreateProduct(Product product);
     void DeleteProduct(Product product);
+
+    Task<bool> HasProductsInCategoryAsync(Guid categoryId, CancellationToken cancellationToken = default);
     
     Task<IEnumerable<Product?>> SearchProductsByNameAsync(string name, bool trackChanges);
     

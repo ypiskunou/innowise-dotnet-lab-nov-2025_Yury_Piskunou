@@ -1,8 +1,11 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application;
+using ProductService.Application.Features.Categories.CreateCategory;
 using ProductService.Application.Features.Categories.GetAllCategories;
 using ProductService.Application.Features.Categories.GetCategoryById;
+using ProductService.Shared.DataTransferObjects;
 
 namespace ProductService.Presentation.Controllers;
 
@@ -26,27 +29,16 @@ public class CategoriesController: ControllerBase
         var category = await _sender.Send(new GetCategoryByIdQuery(id));
         return Ok(category);
     }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")] 
+    public async Task<IActionResult> CreateCategory([FromBody] CategoryForCreationDto categoryDto)
+    {
+        var command = new CreateCategoryCommand(categoryDto);
+        var createdCategory = await _sender.Send(command);
+        
+        return CreatedAtRoute("GetCategoryById", new { id = createdCategory.Id }, createdCategory);
+    }
 
-    // [HttpPost]
-    // [ServiceFilter(typeof(ValidationFilterAttribute))]
-    // public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
-    // {
-    //     var createdBook = await _service.BookService.AddBookAsync(book);
-    //     return CreatedAtRoute("GetBookById", new { id = createdBook.Id }, createdBook);
-    // }
-    //
-    // [HttpPut("{id:guid}")]
-    // [ServiceFilter(typeof(ValidationFilterAttribute))]
-    // public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookForUpdateDto book)
-    // {
-    //     await _service.BookService.UpdateBookAsync(id, book, true);
-    //     return NoContent();
-    // }
-    //
-    // [HttpDelete("{id:guid}")]
-    // public async Task<IActionResult> DeleteBook(Guid id)
-    // {
-    //     await _service.BookService.DeleteBookAsync(id, false);
-    //     return NoContent();
-    // }
+    
 }

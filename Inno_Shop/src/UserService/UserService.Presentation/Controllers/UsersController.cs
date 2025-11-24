@@ -9,6 +9,7 @@ using UserService.Application.Features.Users.GetAllUsers;
 using UserService.Application.Features.Users.GetUserById;
 using UserService.Application.Features.Users.RegisterUser;
 using UserService.Application.Features.Users.UpdateUserProfile;
+using UserService.Application.Features.Users.VerifyEmail;
 
 namespace UserService.Presentation.Controllers;
 
@@ -85,5 +86,14 @@ public class UsersController: ControllerBase
     {
         await _sender.Send(new DeactivateUserCommand(id));
         return NoContent();
+    }
+    
+    [HttpGet("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string token)
+    {
+        var command = new VerifyEmailCommand(email, token);
+        await _sender.Send(command);
+        
+        return Ok("Email confirmed successfully! Now you can login.");
     }
 }

@@ -18,6 +18,8 @@ public class CategoryRepository: RepositoryBase<Category>, ICategoryRepository
         await FindByCondition(b => b.Id == id, trackChanges).FirstOrDefaultAsync(token);
 
     public void CreateCategory(Category Category) => Create(Category);
+    
+    public void UpdateCategory(Category category) => Update(category);
 
     public void DeleteCategory(Category Category) => Delete(Category);
 }

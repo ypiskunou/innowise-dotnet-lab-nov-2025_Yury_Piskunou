@@ -40,6 +40,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         productEntity.UserId = currentUserId.Value;
         productEntity.IsActive = true;
         productEntity.IsDeleted = false;
+        productEntity.DateOfCreation = DateTime.UtcNow;
         
         _repository.Product.CreateProduct(productEntity);
         await _repository.SaveChangesAsync(cancellationToken);
