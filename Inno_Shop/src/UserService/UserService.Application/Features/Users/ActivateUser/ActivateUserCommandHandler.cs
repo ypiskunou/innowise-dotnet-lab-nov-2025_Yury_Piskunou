@@ -1,30 +1,31 @@
 using MediatR;
+using UserService.Application.Features.Users.DeactivateUser;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
 
-namespace UserService.Application.Features.Users.DeactivateUser;
+namespace UserService.Application.Features.Users.ActivateUser;
 
-public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserCommand>
+public class ActivateUserCommandHandler : IRequestHandler<ActivateUserCommand>
 {
     private readonly IRepositoryManager _repository;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public DeactivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory)
+    public ActivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory)
     {
         _repository = repository;
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ActivateUserCommand request, CancellationToken cancellationToken)
     {
         var userEntity = await _repository.User.GetUserByIdAsync(request.Id, trackChanges: true);
         if (userEntity is null) throw new UserNotFoundException(request.Id);
         
-        userEntity.IsActive = false; 
+        userEntity.IsActive = true; 
         await _repository.SaveChangesAsync(cancellationToken);
         
         var client = _httpClientFactory.CreateClient();
-        string url = $"http://localhost:5237/api/products/hide-by-user/{request.Id}";
+        string url = $"http://localhost:5237/api/products/restore-by-user/{request.Id}";
 
         try 
         {

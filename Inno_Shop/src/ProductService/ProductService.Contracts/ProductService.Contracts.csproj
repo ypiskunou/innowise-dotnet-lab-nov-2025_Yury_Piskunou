@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ProductService.Entities\ProductService.Entities.csproj" />
+      <ProjectReference Include="..\ProductService.Shared\ProductService.Shared.csproj" />
     </ItemGroup>
 
 </Project>

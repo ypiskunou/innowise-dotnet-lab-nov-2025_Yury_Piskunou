@@ -1,10 +1,12 @@
 using System.Text;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProductService.Application;
+using ProductService.Application.Behaviors;
 using ProductService.Contracts;
 using ProductService.Repository;
 using ProductService.Services;
@@ -36,6 +38,8 @@ public static class ServiceExtensions
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
         
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }
     
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)

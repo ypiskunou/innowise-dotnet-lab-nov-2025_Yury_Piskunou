@@ -1,12 +1,16 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductService.Application;
 using ProductService.Application.Features.Products.CreateProduct;
 using ProductService.Application.Features.Products.DeleteProduct;
 using ProductService.Application.Features.Products.GetAllProducts;
+using ProductService.Application.Features.Products.GetProductPreviews;
+using ProductService.Application.Features.Products.HideProductsByUserId;
+using ProductService.Application.Features.Products.RestoreProductsByUserId;
 using ProductService.Application.Features.Products.UpdateProduct;
 using ProductService.Shared.DataTransferObjects;
+using ProductService.Shared.RequestFeatures;
 
 namespace ProductService.Presentation.Controllers;
 
@@ -18,10 +22,13 @@ public class ProductsController: ControllerBase
     public ProductsController(ISender sender) => _sender = sender;
     
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts()
+    public async Task<IActionResult> GetAllProducts([FromQuery] ProductParameters productParameters)
     {
-        var products = await _sender.Send(new GetAllProductsQuery());
-        return Ok(products);
+        var pagedResult = await _sender.Send(new GetAllProductsQuery(productParameters));
+        
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+
+        return Ok(pagedResult.products);
     }
     
     [HttpPost]
@@ -51,5 +58,30 @@ public class ProductsController: ControllerBase
         var command = new DeleteProductCommand(id);
         await _sender.Send(command);
         return NoContent();
+    }
+    
+    [HttpPut("hide-by-user/{userId:guid}")]
+    // [Authorize(Roles = "Admin")] // В идеале нужен, но тогда UserService должен слать токен.
+    // Пока можно оставить без Authorize, если сервис недоступен извне (внутренняя сеть Docker).
+    // Либо UserService должен прокидывать токен админа. 
+    // Для простоты пока убери Authorize или оставь AllowAnonymous для этого метода.
+    public async Task<IActionResult> HideProductsByUser(Guid userId)
+    {
+        await _sender.Send(new HideProductsByUserIdCommand(userId));
+        return NoContent();
+    }
+    
+    [HttpPut("restore-by-user/{userId:guid}")]
+    public async Task<IActionResult> RestoreProductsByUser(Guid userId)
+    {
+        await _sender.Send(new RestoreProductsByUserIdCommand(userId));
+        return NoContent();
+    }
+    
+    [HttpGet("previews")]
+    public async Task<IActionResult> GetProductPreviews()
+    {
+        var previews = await _sender.Send(new GetProductPreviewsQuery());
+        return Ok(previews);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects;
+using UserService.Application.Features.Users.ActivateUser;
 using UserService.Application.Features.Users.DeactivateUser;
 using UserService.Application.Features.Users.GetAllUsers;
 using UserService.Application.Features.Users.GetUserById;
@@ -80,6 +81,15 @@ public class UsersController: ControllerBase
         return Ok(userDto);
     }
     
+    [HttpGet("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string token)
+    {
+        var command = new VerifyEmailCommand(email, token);
+        await _sender.Send(command);
+        
+        return Ok("Email confirmed successfully! Now you can login.");
+    }
+    
     [HttpPut("{id:guid}/deactivate")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeactivateUser(Guid id)
@@ -88,12 +98,11 @@ public class UsersController: ControllerBase
         return NoContent();
     }
     
-    [HttpGet("verify-email")]
-    public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string token)
+    [HttpPut("{id:guid}/activate")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ActivateUser(Guid id)
     {
-        var command = new VerifyEmailCommand(email, token);
-        await _sender.Send(command);
-        
-        return Ok("Email confirmed successfully! Now you can login.");
+        await _sender.Send(new ActivateUserCommand(id));
+        return NoContent();
     }
 }

@@ -7,12 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 
-// builder.Services.AddDbContext<RepositoryContext>(
-//     opts => opts.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
-// );
-// builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-// builder.Services.AddScoped<IServiceManager, ServiceManager>();
-// builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureDependencies();
 builder.Services.ConfigureApplicationServices();
@@ -25,7 +19,8 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyOrigin()  
             .AllowAnyMethod()   
-            .AllowAnyHeader();  
+            .AllowAnyHeader()
+            .WithExposedHeaders("X-Pagination");
     });
 });
 

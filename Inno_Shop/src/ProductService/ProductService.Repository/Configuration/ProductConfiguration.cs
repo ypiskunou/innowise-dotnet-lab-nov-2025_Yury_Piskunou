@@ -10,7 +10,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         builder.HasOne(p => p.Category)
             .WithMany(c => c.Products)
-            .HasForeignKey(p => p.CategoryId);
+            .HasForeignKey(p => p.CategoryId); 
+        
+        builder.HasQueryFilter(p => !p.IsDeleted && p.IsActive);
+        builder.Navigation(p => p.Category).AutoInclude();
         
         builder.HasData(
             new Product

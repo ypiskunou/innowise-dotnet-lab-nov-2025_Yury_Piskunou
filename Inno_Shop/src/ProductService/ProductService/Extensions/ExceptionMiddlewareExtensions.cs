@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
 using ProductService.Entities.ErrorModel;
 using ProductService.Entities.Exceptions;
@@ -21,17 +22,30 @@ public static class ExceptionMiddlewareExtensions
                 {
                     context.Response.StatusCode = contextFeature.Error switch
                     {
+                        ValidationAppException => StatusCodes.Status422UnprocessableEntity,
                         NotFoundException => StatusCodes.Status404NotFound,
                         ForbiddenException => StatusCodes.Status403Forbidden,
                         BadRequestException => StatusCodes.Status400BadRequest,
                         _ => StatusCodes.Status500InternalServerError
                     };
 
-                    await context.Response.WriteAsync(new ErrorDetails()
+                    if (contextFeature.Error is ValidationAppException validationException)
                     {
-                        StatusCode = context.Response.StatusCode,
-                        Message = contextFeature.Error.Message
-                    }.ToString());
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new 
+                        { 
+                            StatusCode = context.Response.StatusCode,
+                            Message = "Validation Failed",
+                            Errors = validationException.Errors 
+                        }));
+                    }
+                    else
+                    {
+                        await context.Response.WriteAsync(new ErrorDetails()
+                        {
+                            StatusCode = context.Response.StatusCode,
+                            Message = contextFeature.Error.Message
+                        }.ToString());
+                    }
                 }
             });
         }); 
