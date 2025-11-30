@@ -1,15 +1,33 @@
+
+using NLog;
+using UserService.Contracts;
+using UserService.Extensions;
+using AssemblyReference = UserService.Presentation.AssemblyReference;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
+
+builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.ConfigureDependencies();
+builder.Services.ConfigureApplicationServices();
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AssemblyReference).Assembly);
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILoggerManager>(); 
+app.ConfigureExceptionHandler(logger); 
 
-// Configure the HTTP request pipeline.
+app.MigrateDatabase(); 
+ 
+if (app.Environment.IsProduction()) 
+    app.UseHsts(); 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -18,7 +36,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
