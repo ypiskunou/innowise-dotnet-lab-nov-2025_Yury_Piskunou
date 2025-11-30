@@ -1,4 +1,3 @@
-using Repository;
 using UserService.Contracts;
 
 namespace UserService.Repository;

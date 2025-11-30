@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Shared.DataTransferObjects;
 using UserService.Application.Contracts;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
 using UserService.Entities.Models;
+using UserService.Shared.DataTransferObjects;
 
 namespace UserService.Application.Features.Authentication.AuthenticateUser;
 

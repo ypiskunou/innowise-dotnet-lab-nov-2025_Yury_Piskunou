@@ -1,4 +1,4 @@
-namespace ProductService.Shared.RequestFeatures;
+namespace UserService.Shared.RequestFeatures;
 
 public abstract class RequestParameters
 {

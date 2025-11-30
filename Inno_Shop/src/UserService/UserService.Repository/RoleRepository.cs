@@ -1,6 +1,5 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using Repository;
 using UserService.Contracts;
 using UserService.Entities.Models;
 

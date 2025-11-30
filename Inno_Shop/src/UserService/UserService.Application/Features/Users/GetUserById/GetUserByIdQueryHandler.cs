@@ -1,8 +1,8 @@
 using AutoMapper;
 using MediatR;
-using Shared.DataTransferObjects;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
+using UserService.Shared.DataTransferObjects;
 
 namespace UserService.Application.Features.Users.GetUserById;
 

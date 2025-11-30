@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
-using Entities;
 using Microsoft.EntityFrameworkCore;
 using UserService.Contracts;
 using UserService.Entities.Models;
-using UserService.Repository;
+using UserService.Repository.Extensions;
+using UserService.Shared.RequestFeatures;
 
-namespace Repository;
+namespace UserService.Repository;
 
 public class UserRepository : RepositoryBase<User>, IUserRepository
 {
@@ -13,9 +13,18 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     {
     }
 
-    public async Task<IEnumerable<User?>> GetAllUsersAsync(bool trackChanges) => await FindAll(trackChanges)
-        .OrderBy(u => u.Name)
-        .ToListAsync();
+    public async Task<PagedList<User?>> GetAllUsersAsync(UserParameters userParameters, 
+        bool trackChanges)
+    {
+        var users = FindAll(trackChanges); 
+        
+        users = users
+            .FilterUsers(userParameters.IsActive, userParameters.RoleId)
+            .Search(userParameters.SearchTerm)
+            .Sort(userParameters.OrderBy);
+        
+        return await users.ToPagedListAsync(userParameters.PageNumber, userParameters.PageSize);
+    }
 
     public async Task<IEnumerable<User?>> SearchUsersByNameAsync(string name, bool trackChanges) =>
         await FindByCondition(u => u.Name.ToLower().Contains(name.ToLower().Trim()), trackChanges)

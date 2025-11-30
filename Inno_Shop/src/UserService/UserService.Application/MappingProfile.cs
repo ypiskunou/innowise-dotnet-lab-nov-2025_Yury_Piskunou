@@ -1,6 +1,6 @@
 using AutoMapper;
-using Shared.DataTransferObjects;
 using UserService.Entities.Models;
+using UserService.Shared.DataTransferObjects;
 
 namespace UserService.Application;
 

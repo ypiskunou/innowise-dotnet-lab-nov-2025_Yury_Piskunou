@@ -12,6 +12,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId); 
         
+        builder.HasIndex(p => p.CategoryId)
+            .HasDatabaseName("IX_Products_CategoryId");
+        builder.HasIndex(p => p.UserId)
+            .HasDatabaseName("IX_Products_UserId");
+        builder.HasIndex(p => p.Name);
+        
         builder.HasQueryFilter(p => !p.IsDeleted && p.IsActive);
         builder.Navigation(p => p.Category).AutoInclude();
         

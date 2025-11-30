@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Shared.DataTransferObjects;
+namespace UserService.Shared.DataTransferObjects;
 
 public record UserForRegistrationDto(
     string Name,

@@ -1,5 +1,5 @@
 using MediatR;
-using Shared.DataTransferObjects;
+using UserService.Shared.DataTransferObjects;
 
 namespace UserService.Application.Features.Users.UpdateUserProfile;
 

@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\UserService.Contracts\UserService.Contracts.csproj" />
+      <ProjectReference Include="..\UserService.Shared\UserService.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

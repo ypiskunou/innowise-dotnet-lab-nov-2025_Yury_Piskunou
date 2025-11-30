@@ -1,4 +1,4 @@
-namespace Shared.DataTransferObjects;
+namespace UserService.Shared.DataTransferObjects;
 
 public record UserDto(
     Guid Id,

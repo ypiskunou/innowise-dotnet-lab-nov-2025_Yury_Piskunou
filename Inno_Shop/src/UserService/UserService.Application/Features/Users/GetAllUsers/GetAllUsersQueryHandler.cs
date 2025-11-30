@@ -1,11 +1,13 @@
 using AutoMapper;
 using MediatR;
-using Shared.DataTransferObjects;
 using UserService.Contracts;
+using UserService.Shared.DataTransferObjects;
+using UserService.Shared.RequestFeatures;
 
 namespace UserService.Application.Features.Users.GetAllUsers;
 
-public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IEnumerable<UserDto>>
+public class GetAllUsersQueryHandler 
+    : IRequestHandler<GetAllUsersQuery, (IEnumerable<UserDto> users, MetaData metaData)>
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
@@ -16,12 +18,13 @@ public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IEnumer
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<UserDto>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+    public async Task<(IEnumerable<UserDto> users, MetaData metaData)> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _repository.User.GetAllUsersAsync(trackChanges: false);
+        var usersWithMetaData = await _repository.User
+            .GetAllUsersAsync(request.UserParameters, trackChanges: false);
         
-        var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+        var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersWithMetaData);
 
-        return usersDto;
+        return (users: usersDto, metaData: usersWithMetaData.MetaData);
     }
 }

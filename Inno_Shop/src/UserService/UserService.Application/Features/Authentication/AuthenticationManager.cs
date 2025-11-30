@@ -3,9 +3,9 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Shared.DataTransferObjects;
 using UserService.Application.Contracts;
 using UserService.Entities.Models;
+using UserService.Shared.DataTransferObjects;
 
 namespace UserService.Application.Features.Authentication;
 

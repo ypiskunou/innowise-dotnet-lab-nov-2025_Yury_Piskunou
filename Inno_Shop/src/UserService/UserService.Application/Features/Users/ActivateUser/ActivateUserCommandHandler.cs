@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using UserService.Application.Features.Users.DeactivateUser;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
@@ -9,11 +10,14 @@ public class ActivateUserCommandHandler : IRequestHandler<ActivateUserCommand>
 {
     private readonly IRepositoryManager _repository;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _configuration;
 
-    public ActivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory)
+    public ActivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory, 
+        IConfiguration configuration)
     {
         _repository = repository;
         _httpClientFactory = httpClientFactory;
+        _configuration = configuration;
     }
 
     public async Task Handle(ActivateUserCommand request, CancellationToken cancellationToken)
@@ -25,7 +29,8 @@ public class ActivateUserCommandHandler : IRequestHandler<ActivateUserCommand>
         await _repository.SaveChangesAsync(cancellationToken);
         
         var client = _httpClientFactory.CreateClient();
-        string url = $"http://localhost:5237/api/products/restore-by-user/{request.Id}";
+        var baseUrl = _configuration["ApiUrls:ProductService"];
+        var url = $"{baseUrl}/api/products/restore-by-user/{request.Id}";
 
         try 
         {

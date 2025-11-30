@@ -1,9 +1,9 @@
 using System.Security.Claims;
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataTransferObjects;
 using UserService.Application.Features.Users.ActivateUser;
 using UserService.Application.Features.Users.DeactivateUser;
 using UserService.Application.Features.Users.GetAllUsers;
@@ -11,6 +11,8 @@ using UserService.Application.Features.Users.GetUserById;
 using UserService.Application.Features.Users.RegisterUser;
 using UserService.Application.Features.Users.UpdateUserProfile;
 using UserService.Application.Features.Users.VerifyEmail;
+using UserService.Shared.DataTransferObjects;
+using UserService.Shared.RequestFeatures;
 
 namespace UserService.Presentation.Controllers;
 
@@ -66,11 +68,14 @@ public class UsersController: ControllerBase
     // --- ADMIN-ONLY ENDPOINTS ---
     
     [HttpGet]
-    [Authorize(Roles = "Admin")] 
-    public async Task<IActionResult> GetAllUsers()
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAllUsers([FromQuery] UserParameters userParameters)
     {
-        var users = await _sender.Send(new GetAllUsersQuery());
-        return Ok(users);
+        var pagedResult = await _sender.Send(new GetAllUsersQuery(userParameters));
+    
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+
+        return Ok(pagedResult.users);
     }
     
     [HttpGet("{id:guid}", Name = "GetUserById")]

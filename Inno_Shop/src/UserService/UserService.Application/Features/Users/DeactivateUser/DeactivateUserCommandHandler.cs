@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using UserService.Contracts;
 using UserService.Entities.Exceptions;
 
@@ -8,11 +9,14 @@ public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserComman
 {
     private readonly IRepositoryManager _repository;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _configuration;
 
-    public DeactivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory)
+    public DeactivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory, 
+        IConfiguration configuration)
     {
         _repository = repository;
         _httpClientFactory = httpClientFactory;
+        _configuration = configuration;
     }
 
     public async Task Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
@@ -24,7 +28,8 @@ public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserComman
         await _repository.SaveChangesAsync(cancellationToken);
         
         var client = _httpClientFactory.CreateClient();
-        string url = $"http://localhost:5237/api/products/hide-by-user/{request.Id}";
+        var baseUrl = _configuration["ApiUrls:ProductService"];
+        var url = $"{baseUrl}/api/products/hide-by-user/{request.Id}";
 
         try 
         {
