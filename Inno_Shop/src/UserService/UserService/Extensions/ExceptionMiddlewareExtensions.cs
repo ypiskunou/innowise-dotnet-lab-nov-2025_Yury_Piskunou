@@ -1,14 +1,16 @@
 using System.Net;
-using Entities.ErrorModel;
+using System.Text.Json;
 using Entities.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
+using UserService.Contracts;
+using UserService.Entities.ErrorModel;
 using UserService.Entities.Exceptions;
 
 namespace UserService.Extensions;
 
 public static class ExceptionMiddlewareExtensions 
 { 
-    public static void ConfigureExceptionHandler(this WebApplication app) 
+    public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager logger) 
     { 
         app.UseExceptionHandler(appError => 
         { 
@@ -20,18 +22,34 @@ public static class ExceptionMiddlewareExtensions
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                 if (contextFeature != null)
                 {
+                    logger.LogError($"Something went wrong: {contextFeature.Error}");
+                    
                     context.Response.StatusCode = contextFeature.Error switch
                     {
+                        ValidationAppException => StatusCodes.Status422UnprocessableEntity,
                         NotFoundException => StatusCodes.Status404NotFound,
+                        ForbiddenException => StatusCodes.Status403Forbidden,
                         BadRequestException => StatusCodes.Status400BadRequest,
                         _ => StatusCodes.Status500InternalServerError
                     };
 
-                    await context.Response.WriteAsync(new ErrorDetails()
+                    if (contextFeature.Error is ValidationAppException validationException)
                     {
-                        StatusCode = context.Response.StatusCode,
-                        Message = contextFeature.Error.Message
-                    }.ToString());
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new 
+                        { 
+                            StatusCode = context.Response.StatusCode,
+                            Message = "Validation Failed",
+                            Errors = validationException.Errors 
+                        }));
+                    }
+                    else
+                    {
+                        await context.Response.WriteAsync(new ErrorDetails()
+                        {
+                            StatusCode = context.Response.StatusCode,
+                            Message = contextFeature.Error.Message
+                        }.ToString());
+                    }
                 }
             });
         }); 

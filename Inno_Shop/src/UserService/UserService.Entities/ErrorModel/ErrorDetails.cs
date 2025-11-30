@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Entities.ErrorModel;
+namespace UserService.Entities.ErrorModel;
 
 public class ErrorDetails 
 { 

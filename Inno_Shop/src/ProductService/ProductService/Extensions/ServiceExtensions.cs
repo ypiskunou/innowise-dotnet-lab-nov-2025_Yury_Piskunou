@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using ProductService.Application;
 using ProductService.Application.Behaviors;
 using ProductService.Contracts;
+using ProductService.LoggerService;
 using ProductService.Repository;
 using ProductService.Services;
 
@@ -40,6 +41,8 @@ public static class ServiceExtensions
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        
+        services.AddSingleton<ILoggerManager, LoggerManager>();
     }
     
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
@@ -77,12 +80,13 @@ public static class ServiceExtensions
             s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
-                Description = "Вставьте токен так: Bearer eyJhbGciOiJIUz...",
+                Description = "Введите токен (без слова Bearer, просто токен)",
                 Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "bearer"
             });
-
+            
             s.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -92,8 +96,7 @@ public static class ServiceExtensions
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        },
-                        Name = "Bearer",
+                        }
                     },
                     new List<string>()
                 }

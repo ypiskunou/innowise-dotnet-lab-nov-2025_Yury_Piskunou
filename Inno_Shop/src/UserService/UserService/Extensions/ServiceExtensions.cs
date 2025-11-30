@@ -1,16 +1,19 @@
 using System.Text;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService.Application;
+using UserService.Application.Behaviors;
 using UserService.Application.Contracts;
 using UserService.Application.Features.Authentication;
 using UserService.Application.Services;
 using UserService.Contracts;
 using UserService.Entities.Models;
+using UserService.LoggerService;
 using UserService.Repository;
 
 namespace UserService.Extensions;
@@ -41,9 +44,10 @@ public static class ServiceExtensions
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         
         services.AddScoped<IEmailSender, EmailSender>();
-
-        // Здесь же можно будет добавить Pipeline Behaviors
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        
+        services.AddSingleton<ILoggerManager, LoggerManager>();
+        
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }
     
     public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)

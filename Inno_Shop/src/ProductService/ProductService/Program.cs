@@ -1,8 +1,12 @@
 
+using NLog;
+using ProductService.Contracts;
 using ProductService.Extensions;
 using ProductService.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
@@ -26,7 +30,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.ConfigureExceptionHandler();
+var logger = app.Services.GetRequiredService<ILoggerManager>(); 
+app.ConfigureExceptionHandler(logger); 
+ 
+if (app.Environment.IsProduction()) 
+    app.UseHsts(); 
 
 if (app.Environment.IsDevelopment())
 {

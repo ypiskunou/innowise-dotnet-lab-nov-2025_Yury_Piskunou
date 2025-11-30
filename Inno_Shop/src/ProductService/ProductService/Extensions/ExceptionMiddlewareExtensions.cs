@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
+using ProductService.Contracts;
 using ProductService.Entities.ErrorModel;
 using ProductService.Entities.Exceptions;
 
@@ -8,7 +9,7 @@ namespace ProductService.Extensions;
 
 public static class ExceptionMiddlewareExtensions 
 { 
-    public static void ConfigureExceptionHandler(this WebApplication app) 
+    public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager logger) 
     { 
         app.UseExceptionHandler(appError => 
         { 
@@ -20,6 +21,8 @@ public static class ExceptionMiddlewareExtensions
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                 if (contextFeature != null)
                 {
+                    logger.LogError($"Something went wrong: {contextFeature.Error}");
+                    
                     context.Response.StatusCode = contextFeature.Error switch
                     {
                         ValidationAppException => StatusCodes.Status422UnprocessableEntity,
