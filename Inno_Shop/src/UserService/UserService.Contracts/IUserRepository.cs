@@ -12,10 +12,4 @@ public interface IUserRepository
     Task<User?> GetUserByEmailAsync(string email, bool trackChanges);
     void CreateUser(User user);
     void DeleteUser(User user);
-    
-    Task<IEnumerable<User?>> SearchUsersByNameAsync(string name, bool trackChanges);
-    
-    IQueryable<User?> GetUsersWithRoles(bool trackChanges);
-    Task<IEnumerable<T>> GetUsersAsAsync<T>(IQueryable<User?> users, Expression<Func<User, T>> selector);
-    
 }
