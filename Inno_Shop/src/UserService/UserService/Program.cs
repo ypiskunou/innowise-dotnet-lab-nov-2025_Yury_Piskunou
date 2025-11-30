@@ -22,6 +22,8 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>(); 
 app.ConfigureExceptionHandler(logger); 
+
+app.MigrateDatabase(); 
  
 if (app.Environment.IsProduction()) 
     app.UseHsts(); 

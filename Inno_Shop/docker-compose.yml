@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  users-db:
+    image: postgres:latest
+    container_name: users-db
+    environment:
+      - POSTGRES_DB=UserServiceDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - users_data:/var/lib/postgresql/data
+    networks:
+      - inno-network
+
+  products-db:
+    image: postgres:latest
+    container_name: products-db
+    environment:
+      - POSTGRES_DB=ProductServiceDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - products_data:/var/lib/postgresql/data
+    networks:
+      - inno-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025" 
+      - "8025:8025" 
+    networks:
+      - inno-network
+
+  user-service:
+    build:
+      context: .
+      dockerfile: src/UserService/UserService/Dockerfile
+    container_name: user-service
+    ports:
+      - "5001:80" 
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=users-db;Port=5432;Database=UserServiceDb;User Id=postgres;Password=postgres;
+      - ApiUrls__ProductService=http://product-service
+      - EmailSettings__SmtpServer=mailhog
+      - EmailSettings__Port=1025
+    depends_on:
+      - users-db
+      - mailhog
+    networks:
+      - inno-network
+
+  product-service:
+    build:
+      context: .
+      dockerfile: src/ProductService/ProductService/Dockerfile
+    container_name: product-service
+    ports:
+      - "5002:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=products-db;Port=5432;Database=ProductServiceDb;User Id=postgres;Password=postgres;
+    depends_on:
+      - products-db
+    networks:
+      - inno-network
+
+networks:
+  inno-network:
+    driver: bridge
+
+volumes:
+  users_data:
+  products_data:

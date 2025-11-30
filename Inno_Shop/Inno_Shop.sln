@@ -3,6 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AC6AC3C-51DD-40EB-9995-BF2167DC7EB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserService", "UserService", "{031973B7-D51C-4CC1-A245-6249CC064920}"
+	ProjectSection(SolutionItems) = preProject
+		src\UserService\Dockerfile = src\UserService\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductService", "ProductService", "{CCBF576C-7C24-4A81-B955-646F7480F135}"
 EndProject
