@@ -13,9 +13,12 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(src => src.Category.Name));
 
         CreateMap<ProductForCreationDto, Product>();
-
         CreateMap<ProductForUpdateDto, Product>();
         
         CreateMap<CategoryForCreationDto, Category>();
+        
+        CreateMap<Category, CategoryDto>(); 
+        
+        CreateMap<CategoryForUpdateDto, Category>(); 
     }
 }

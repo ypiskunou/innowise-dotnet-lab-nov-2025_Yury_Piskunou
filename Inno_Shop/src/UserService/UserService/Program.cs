@@ -19,6 +19,18 @@ builder.Services.AddControllers()
     .AddApplicationPart(typeof(AssemblyReference).Assembly);
 builder.Services.AddHttpClient();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>(); 
 app.ConfigureExceptionHandler(logger); 
@@ -34,7 +46,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
