@@ -5,36 +5,45 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProductsPage from './pages/ProductsPage';
 import CreateProductPage from './pages/CreateProductPage';
-import UsersPage from './pages/UsersPage'; // Админка
+import EditProductPage from './pages/EditProductPage'; // Новая страница
+import MyProductsPage from './pages/MyProductsPage'; // Новая страница
+import UsersPage from './pages/UsersPage';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
-
 function App() {
-  const { token, role, isActive } = useContext(AuthContext);
+const { token, role, isActive } = useContext(AuthContext);
+return (
+<Router>
+<Navbar />
+<div className="container mt-4">
+<Routes>
+<Route path="/" element={<Navigate to="/products" />} />
+<Route path="/login" element={!token ? <LoginPage /> : <Navigate to="/products" />} />
+<Route path="/register" element={!token ? <RegisterPage /> : <Navigate to="/products" />} />
+code
+Code
+<Route path="/products" element={<ProductsPage />} />
 
-  return (
-    <Router>
-      <Navbar />
-      <div className="container mt-4">
-        <Routes>
-          <Route path="/" element={<Navigate to="/products" />} />
-          <Route path="/login" element={!token ? <LoginPage /> : <Navigate to="/products" />} />
-          <Route path="/register" element={!token ? <RegisterPage /> : <Navigate to="/products" />} />
-          
-          <Route path="/products" element={<ProductsPage />} />
+      {/* Управление своими товарами */}
+      <Route path="/my-products" element={
+        token ? <MyProductsPage /> : <Navigate to="/login" />
+      } />
 
-          <Route path="/create-product" element={
-            token && isActive ? <CreateProductPage /> : <Navigate to="/login" />
-          } />
+      <Route path="/create-product" element={
+        token && isActive ? <CreateProductPage /> : <Navigate to="/login" />
+      } />
 
-          {/* Защита админки */}
-          <Route path="/admin/users" element={
-            role === 'Admin' ? <UsersPage /> : <Navigate to="/products" />
-          } />
-        </Routes>
-      </div>
-    </Router>
-  );
+      <Route path="/edit-product/:id" element={
+         token && isActive ? <EditProductPage /> : <Navigate to="/login" />
+      } />
+
+      {/* Админка */}
+      <Route path="/admin/users" element={
+        role === 'Admin' ? <UsersPage /> : <Navigate to="/products" />
+      } />
+    </Routes>
+  </div>
+</Router>
+);
 }
-
 export default App;

@@ -42,6 +42,12 @@ public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserComman
         await _repository.SaveChangesAsync(cancellationToken);
         
         var client = _httpClientFactory.CreateClient();
+        var token = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
+        
+        if (!string.IsNullOrEmpty(token))
+        {
+            client.DefaultRequestHeaders.Add("Authorization", token);
+        }
         var baseUrl = _configuration["ApiUrls:ProductService"];
         var url = $"{baseUrl}/api/products/hide-by-user/{request.Id}";
 

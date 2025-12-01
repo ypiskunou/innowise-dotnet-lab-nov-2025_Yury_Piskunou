@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Features.Products.CreateProduct;
 using ProductService.Application.Features.Products.DeleteProduct;
 using ProductService.Application.Features.Products.GetAllProducts;
+using ProductService.Application.Features.Products.GetMyProducts;
 using ProductService.Application.Features.Products.GetProductPreviews;
 using ProductService.Application.Features.Products.HideProductsByUserId;
 using ProductService.Application.Features.Products.RestoreProductsByUserId;
@@ -29,6 +30,14 @@ public class ProductsController: ControllerBase
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
         return Ok(pagedResult.products);
+    }
+    
+    [HttpGet("my")]
+    [Authorize] 
+    public async Task<IActionResult> GetMyProducts()
+    {
+        var products = await _sender.Send(new GetMyProductsQuery());
+        return Ok(products);
     }
     
     [HttpPost]
@@ -61,10 +70,7 @@ public class ProductsController: ControllerBase
     }
     
     [HttpPut("hide-by-user/{userId:guid}")]
-    // [Authorize(Roles = "Admin")] // В идеале нужен, но тогда UserService должен слать токен.
-    // Пока можно оставить без Authorize, если сервис недоступен извне (внутренняя сеть Docker).
-    // Либо UserService должен прокидывать токен админа. 
-    // Для простоты пока убери Authorize или оставь AllowAnonymous для этого метода.
+    [Authorize(Roles = "Admin")] 
     public async Task<IActionResult> HideProductsByUser(Guid userId)
     {
         await _sender.Send(new HideProductsByUserIdCommand(userId));

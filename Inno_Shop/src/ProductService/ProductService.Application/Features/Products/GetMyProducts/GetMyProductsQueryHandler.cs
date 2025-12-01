@@ -9,7 +9,7 @@ public class GetMyProductsQueryHandler : IRequestHandler<GetMyProductsQuery, IEn
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
-    private readonly ICurrentUserService _currentUser; // Наш сервис
+    private readonly ICurrentUserService _currentUser;
 
     public GetMyProductsQueryHandler(IRepositoryManager repository, IMapper mapper, ICurrentUserService currentUser)
     {
