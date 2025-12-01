@@ -5,5 +5,7 @@ public record ProductDto(
     string Name, 
     decimal Price, 
     string Description, 
-    string CategoryName 
+    string CategoryName,
+    Guid CategoryId, 
+    bool IsActive
 );
