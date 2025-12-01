@@ -48,7 +48,15 @@ public class CreateProductCommandHandlerTests
             UserId = userId,
         };
         
-        var productDto = new ProductDto(productEntity.Id, "Test Product", 100, "Desc", "Cat");
+        var productDto = new ProductDto(
+            productEntity.Id, 
+            "Test Product", 
+            100, 
+            "Desc", 
+            "Cat",
+            Guid.NewGuid(), 
+            true
+            );
 
         
         _mockUser.Setup(x => x.UserId).Returns(userId);
