@@ -28,6 +28,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             throw new UnauthorizedAccessException();
         }
         
+        if (!_currentUserService.IsActive)
+        {
+            throw new ForbiddenException("Ваш аккаунт деактивирован. Вы не можете создавать новые товары.");
+        }
+        
         var category = await _repository.Category
             .GetCategoryByIdAsync(request.Product.CategoryId, trackChanges: false, cancellationToken);
         if (category is null)

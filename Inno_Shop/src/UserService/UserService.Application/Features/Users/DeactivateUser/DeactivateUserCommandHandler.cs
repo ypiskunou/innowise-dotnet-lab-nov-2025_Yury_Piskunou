@@ -1,3 +1,5 @@
+using System.Security.Claims; 
+using Microsoft.AspNetCore.Http;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using UserService.Contracts;
@@ -10,17 +12,29 @@ public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserComman
     private readonly IRepositoryManager _repository;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DeactivateUserCommandHandler(IRepositoryManager repository, IHttpClientFactory httpClientFactory, 
-        IConfiguration configuration)
+        IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
     {
+        var currentUserIdString = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (Guid.TryParse(currentUserIdString, out var currentUserId))
+        {
+            if (currentUserId == request.Id)
+            {
+                throw new BadRequestException("You cannot deactivate yourself.");
+            }
+        }
+        
         var userEntity = await _repository.User.GetUserByIdAsync(request.Id, trackChanges: true);
         if (userEntity is null) throw new UserNotFoundException(request.Id);
         

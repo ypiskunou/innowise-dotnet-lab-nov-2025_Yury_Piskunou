@@ -31,6 +31,11 @@ public class AuthenticateUserQueryHandler : IRequestHandler<AuthenticateUserQuer
         if (user is null)
             throw new InvalidPasswordException();
         
+        if (!user.IsActive)
+        {
+            throw new ForbiddenException("Ваш аккаунт был деактивирован администратором.");
+        }
+        
         if (user.VerifiedAt is null)
         {
             throw new AccountNotVerifiedException();

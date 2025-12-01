@@ -26,4 +26,14 @@ public class CurrentUserService : ICurrentUserService
             return null;
         }
     }
+    
+    public bool IsActive
+    {
+        get
+        {
+            var isActiveString = _httpContextAccessor.HttpContext?.User?.FindFirstValue("IsActive");
+            
+            return bool.TryParse(isActiveString, out var isActive) && isActive;
+        }
+    }
 }

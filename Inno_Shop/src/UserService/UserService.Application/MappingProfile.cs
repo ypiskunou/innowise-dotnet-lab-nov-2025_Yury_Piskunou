@@ -10,6 +10,8 @@ public class MappingProfile : Profile
     {
         CreateMap<UserForRegistrationDto, User>();
         
+        CreateMap<UserForUpdateDto, User>();
+        
         CreateMap<Role, RoleDto>();
         
         CreateMap<User, UserDto>()
