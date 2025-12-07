@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using MediatR;
 using ProductService.Contracts;
 using ProductService.Entities.Models;
+using ProductService.Repository.Extensions;
 using ProductService.Shared.DataTransferObjects;
 
 namespace ProductService.Application.Features.Products.GetProductPreviews;
@@ -20,6 +21,10 @@ public class GetProductPreviewsQueryHandler : IRequestHandler<GetProductPreviews
     {
         var query = _repository.Product.GetProductsQuery(trackChanges: false);
         
+        query = query.Search(request.SearchTerm);
+        
+        query = query.Take(10);
+        
         Expression<Func<Product, ProductPreviewDto>> selector = p => new ProductPreviewDto(
             p.Id,
             p.Name,
@@ -27,8 +32,6 @@ public class GetProductPreviewsQueryHandler : IRequestHandler<GetProductPreviews
             p.Category.Name 
         );
         
-        var previews = await _repository.Product.GetProductsAsAsync(query, selector);
-
-        return previews;
+        return await _repository.Product.GetProductsAsAsync(query, selector);
     }
 }
