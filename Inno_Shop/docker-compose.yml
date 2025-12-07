@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   users-db:
     image: postgres:latest
@@ -14,6 +12,11 @@ services:
       - users_data:/var/lib/postgresql/data
     networks:
       - inno-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   products-db:
     image: postgres:latest
@@ -28,6 +31,11 @@ services:
       - products_data:/var/lib/postgresql/data
     networks:
       - inno-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   mailhog:
     image: mailhog/mailhog
@@ -51,10 +59,13 @@ services:
       - EmailSettings__SmtpServer=mailhog
       - EmailSettings__Port=1025
     depends_on:
-      - users-db
-      - mailhog
+      users-db:
+        condition: service_healthy 
+      mailhog:
+        condition: service_started
     networks:
       - inno-network
+    restart: on-failure  
 
   product-service:
     build:
@@ -66,9 +77,11 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=products-db;Port=5432;Database=ProductServiceDb;User Id=postgres;Password=postgres;
     depends_on:
-      - products-db
+      products-db:
+        condition: service_healthy 
     networks:
       - inno-network
+    restart: on-failure 
 
 networks:
   inno-network:
@@ -77,4 +90,3 @@ networks:
 volumes:
   users_data:
   products_data:
-

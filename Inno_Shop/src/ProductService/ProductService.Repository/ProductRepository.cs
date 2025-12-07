@@ -29,6 +29,7 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
     public async Task<Product?> GetProductByIdAsync(Guid id, bool trackChanges,
         CancellationToken cancellationToken) =>
         await FindByCondition(a => a.Id == id, trackChanges)
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(cancellationToken);
 
     public void CreateProduct(Product product) => Create(product);

@@ -6,6 +6,7 @@ using ProductService.Application.Features.Products.CreateProduct;
 using ProductService.Application.Features.Products.DeleteProduct;
 using ProductService.Application.Features.Products.GetAllProducts;
 using ProductService.Application.Features.Products.GetMyProducts;
+using ProductService.Application.Features.Products.GetProductById;
 using ProductService.Application.Features.Products.GetProductPreviews;
 using ProductService.Application.Features.Products.HideProductsByUserId;
 using ProductService.Application.Features.Products.RestoreProductsByUserId;
@@ -38,6 +39,13 @@ public class ProductsController: ControllerBase
     {
         var products = await _sender.Send(new GetMyProductsQuery());
         return Ok(products);
+    }
+    
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetProduct(Guid id)
+    {
+        var product = await _sender.Send(new GetProductByIdQuery(id));
+        return Ok(product);
     }
     
     [HttpPost]
