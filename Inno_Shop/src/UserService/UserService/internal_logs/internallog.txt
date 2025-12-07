@@ -3784,3 +3784,28 @@
 2025-12-07 23:05:44.8783 Trace  Scanning Property Layout '${longdate} ${level:uppercase=true} ${message}' NLog.Layouts.Layout
 2025-12-07 23:05:44.8783 Trace FileTarget(Name=logfile) has 2 layouts
 2025-12-07 23:05:44.8783 Info Configuration initialized: TargetNames=logfile, ConfigItems=12, AutoReload=true, FilePath=C:\Users\ilumini\RiderProjects\innowise-dotnet-lab-nov-2025_Yury_Piskunou\Inno_Shop\src\UserService\UserService\nlog.config
+2025-12-08 00:40:09.9334 Info AppDomain Shutting down. LogFactory closing...
+2025-12-08 00:40:09.9455 Debug LogFactory Starting Flush with timeout=1.5 secs
+2025-12-08 00:40:09.9455 Trace Flushing all 1 targets...
+2025-12-08 00:40:09.9611 Trace FileTarget(Name=logfile): FlushAsync
+2025-12-08 00:40:09.9611 Debug Flush completed
+2025-12-08 00:40:09.9611 Trace FileTarget(Name=logfile): FlushAsync Done
+2025-12-08 00:40:09.9723 Debug Unregistered shutdown event handler for ProcessExit.
+2025-12-08 00:40:09.9723 Debug AutoReload Config File Monitor stopping, since no active configuration
+2025-12-08 00:40:09.9723 Debug Stop watching file-filter 'nlog.config' in directory: C:\Users\ilumini\RiderProjects\innowise-dotnet-lab-nov-2025_Yury_Piskunou\Inno_Shop\src\UserService\UserService
+2025-12-08 00:40:09.9723 Debug Closing logging configuration...
+2025-12-08 00:40:09.9723 Trace Closing FileTarget(Name=logfile)
+2025-12-08 00:40:09.9723 Debug FileTarget(Name=logfile): Closing...
+2025-12-08 00:40:09.9723 Debug FileTarget(Name=logfile): Closed.
+2025-12-08 00:40:09.9881 Trace Closing .\logs\${shortdate}_logfile.txt
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${literal}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${shortdate}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${literal}
+2025-12-08 00:40:09.9881 Trace Closing ${longdate} ${level:uppercase=true} ${message}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${longdate}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${literal}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${level}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${literal}
+2025-12-08 00:40:09.9881 Trace Closing Layout Renderer: ${message}
+2025-12-08 00:40:09.9881 Debug Finished closing logging configuration.
+2025-12-08 00:40:09.9881 Info LogFactory has been disposed.
