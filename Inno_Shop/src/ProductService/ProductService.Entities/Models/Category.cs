@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ProductService.Entities.Models;
 
 public class Category
@@ -7,4 +9,7 @@ public class Category
     public string? Description { get; set; }
     
     public ICollection<Product> Products { get; set; } = new List<Product>();
+    
+    [NotMapped]
+    public int ProductCount { get; set; } 
 }

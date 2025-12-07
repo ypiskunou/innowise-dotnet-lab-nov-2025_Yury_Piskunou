@@ -24,6 +24,7 @@ public class ProductsController: ControllerBase
     public ProductsController(ISender sender) => _sender = sender;
     
     [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> GetAllProducts([FromQuery] ProductParameters productParameters)
     {
         var pagedResult = await _sender.Send(new GetAllProductsQuery(productParameters));
@@ -93,9 +94,9 @@ public class ProductsController: ControllerBase
     }
     
     [HttpGet("previews")]
-    public async Task<IActionResult> GetProductPreviews()
+    public async Task<IActionResult> GetProductPreviews([FromQuery] string? searchTerm)
     {
-        var previews = await _sender.Send(new GetProductPreviewsQuery());
+        var previews = await _sender.Send(new GetProductPreviewsQuery(searchTerm));
         return Ok(previews);
     }
 }

@@ -113,8 +113,9 @@ const EditProductPage = () => {
                         <input className="form-check-input" type="checkbox" id="activeSwitch"
                                checked={formData.isActive}
                                onChange={e => setFormData({...formData, isActive: e.target.checked})} />
-                        <label className="form-check-label" htmlFor="activeSwitch">
-                            Товар активен
+                        <label className={`form-check-label ${formData.isActive ? 'text-success' : 'text-secondary'}`} 
+                               htmlFor="activeSwitch">
+                            {formData.isActive ? "Товар активен (Виден в каталоге)" : "Черновик (Скрыт)"}
                         </label>
                     </div>
 
