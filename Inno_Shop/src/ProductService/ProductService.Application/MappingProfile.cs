@@ -17,7 +17,9 @@ public class MappingProfile : Profile
         
         CreateMap<CategoryForCreationDto, Category>();
         
-        CreateMap<Category, CategoryDto>(); 
+        CreateMap<Category, CategoryDto>()
+            .ForCtorParam("TotalProducts", opt 
+                => opt.MapFrom(src => src.ProductCount));
         
         CreateMap<CategoryForUpdateDto, Category>(); 
     }

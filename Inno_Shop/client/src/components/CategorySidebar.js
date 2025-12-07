@@ -11,31 +11,61 @@ const CategorySidebar = ({ selectedCategoryId, onSelectCategory }) => {
             .catch(e => console.error(e));
     }, []);
 
+    // Считаем общее количество
+    const totalAll = categories.reduce((sum, cat) => sum + cat.totalProducts, 0);
+
+    // Функция закрытия меню при уходе мышки
+    const handleMouseLeave = () => {
+        const sidebarElement = document.getElementById('categorySidebar');
+        // Обращаемся к глобальному объекту bootstrap
+        if (window.bootstrap) {
+            const bsInstance = window.bootstrap.Offcanvas.getInstance(sidebarElement);
+            if (bsInstance) {
+                bsInstance.hide();
+            }
+        }
+    };
+
     return (
-        <div className="offcanvas offcanvas-start" tabIndex="-1" id="categorySidebar">
+        <div
+            className="offcanvas offcanvas-start"
+            tabIndex="-1"
+            id="categorySidebar"
+            // Добавляем обработчик ухода мыши
+            onMouseLeave={handleMouseLeave}
+            style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.55)', // Чуть менее прозрачный для читаемости
+                backdropFilter: 'blur(10px)'
+            }}
+        >
             <div className="offcanvas-header">
                 <h5 className="offcanvas-title">Категории</h5>
                 <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
             </div>
             <div className="offcanvas-body">
                 <div className="list-group list-group-flush">
-                    {/* Кнопка "Все категории" */}
+                    {/* Кнопка "Все товары" */}
                     <button
-                        className={`list-group-item list-group-item-action ${!selectedCategoryId ? 'active' : ''}`}
+                        // Логика классов: если активна - стандартный синий, если нет - прозрачный
+                        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${!selectedCategoryId ? 'active' : 'bg-transparent'}`}
                         onClick={() => onSelectCategory('')}
-                        data-bs-dismiss="offcanvas" // Закрывать меню при клике
                     >
-                        Все товары
+                        <span>Все товары</span>
+                        <span className={`badge rounded-pill ${!selectedCategoryId ? 'bg-light text-primary' : 'bg-secondary'}`}>
+                            {totalAll}
+                        </span>
                     </button>
 
                     {categories.map(c => (
                         <button
                             key={c.id}
-                            className={`list-group-item list-group-item-action ${selectedCategoryId === c.id ? 'active' : ''}`}
+                            className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selectedCategoryId === c.id ? 'active' : 'bg-transparent'}`}
                             onClick={() => onSelectCategory(c.id)}
-                            data-bs-dismiss="offcanvas"
                         >
-                            {c.name}
+                            <span>{c.name}</span>
+                            <span className={`badge rounded-pill ${selectedCategoryId === c.id ? 'bg-light text-primary' : 'bg-primary'}`}>
+                                {c.totalProducts}
+                            </span>
                         </button>
                     ))}
                 </div>
