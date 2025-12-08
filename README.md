@@ -79,9 +79,9 @@
 
 ## 🔑 Тестовые данные
 
-*   **Admin:** `admin@example.com` / `123!user`
-*   **User:** `user@example.com` / `123!user`
-*   **Banned User:** `volchkov@inno.by` / `123!user`
+*   **Admin:** `admin@example.com` / `admin`
+*   **User:** `user@example.com` / `user`
+*   **Banned User:** `volchkov@inno.by` / `notnA123`
 
 ## 🧪 Сценарии использования
 
